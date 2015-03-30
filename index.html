@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+</head>
+<body>
+<div id="editor">
+Ctrl-O: open file
+Ctrl-S: save file
+use ssh terminal to build
+
+Todo: show file explorer
+Todo: create node file watcher to trigger build in terminal
+</div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var filepath = '';
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/c_cpp");
+    editor.commands.addCommand({
+        name: 'saveCommand',
+        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+        exec: function(editor) {
+            if ((filepath == '') || (filepath == null)) {
+                filepath = prompt("Save as:", "default.cpp");
+            }
+            if ((filepath != null) && (filepath != '')) {
+                $.post( "/save", { fn: filepath, data: editor.getValue() }, null, "text");
+                console.log("saved");
+            }
+        },
+        readOnly: false // false if this command should not apply in readOnly mode
+    });
+
+    editor.commands.addCommand({
+        name: 'openCommand',
+        bindKey: {win: 'Ctrl-O',  mac: 'Command-O'},
+        exec: function(editor) {
+
+            res = prompt("Open file:", filepath);
+            if ((res != null) && (res != '')) {
+                $.get( "/open", { fn: res },function( data ) {
+                    if ((data != null) && (data != '')) {
+                        filepath = res;
+                        editor.setValue(data)
+                        console.log("opened");
+                    }
+                }, "text");
+            }
+        },
+        readOnly: true // false if this command should not apply in readOnly mode
+    });
+</script>
+
+</body>
+</html>
