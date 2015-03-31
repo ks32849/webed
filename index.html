@@ -33,11 +33,13 @@ Todo: create node file watcher to trigger build in terminal
         name: 'saveCommand',
         bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
         exec: function(editor) {
-            if ((filepath == '') || (filepath == null)) {
-                filepath = prompt("Save as:", "default.cpp");
-            }
-            if ((filepath != null) && (filepath != '')) {
-                $.post( "/save", { fn: filepath, data: editor.getValue() }, null, "text");
+            //if ((filepath == '') || (filepath == null)) {
+            res = prompt("Save as:", filepath);
+            //}
+            if ((res != null) && (res != '')) {
+                $.post( "/save", { fn: res, data: editor.getValue() }, null, "text");
+                filepath = res;
+                $("title").text(filepath);
                 console.log("saved");
             }
         },
@@ -54,6 +56,7 @@ Todo: create node file watcher to trigger build in terminal
                 $.get( "/open", { fn: res },function( data ) {
                     if ((data != null) && (data != '')) {
                         filepath = res;
+                         $("title").text(filepath);
                         editor.setValue(data)
                         console.log("opened");
                     }

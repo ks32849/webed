@@ -37,11 +37,11 @@ app.listen(9778,function(){
 });
 
 saveFile = function(filepath, data) {
-  console.log("Save file", filepath, data);
+  console.log("Save file", filepath);
   fs.writeFile(filepath, data, function (err) {
-    if (err) { 
-      throw err;
-    }          
+    if (err) {
+      throw err;
+    }
   });
 }
 
@@ -50,9 +50,9 @@ openFile = function(filepath) {
   var content;
   /* This is async, so the callback is called some time later after we have returned!
    fs.readFile(filepath, function (err, data) {
-    if (err) { 
-      throw err;
-    }          
+    if (err) {
+      throw err;
+    }
     content = data.toString();
   });
 */
