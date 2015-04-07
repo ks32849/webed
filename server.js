@@ -27,7 +27,7 @@ app.post('/save',function(req,res){
    if(done==true){
      console.log("saving...");
      saveFile(req.body.fn, req.body.data);
-     res.end("File uploaded.");
+     res.end();
    }
 });
 
@@ -40,7 +40,7 @@ saveFile = function(filepath, data) {
   console.log("Save file", filepath);
   fs.writeFile(filepath, data, function (err) {
     if (err) {
-      throw err;
+      console.log("Save failed")
     }
   });
 }
@@ -48,18 +48,28 @@ saveFile = function(filepath, data) {
 openFile = function(filepath) {
   console.log("Open file " + filepath);
   var content;
-  /* This is async, so the callback is called some time later after we have returned!
-   fs.readFile(filepath, function (err, data) {
-    if (err) {
-      throw err;
-    }
-    content = data.toString();
-  });
-*/
+  var stat;
+  var dir;
+
   try {
-    content = fs.readFileSync(filepath);
+    stat = fs.statSync(filepath);
+    if (stat.isFile()) {
+      content = fs.readFileSync(filepath);
+    }
+    else if (stat.isDirectory()) {
+      dir = fs.readdirSync(filepath);
+      content = new Buffer('');
+      for(var i=0; i<dir.length; i++) {
+        content = Buffer.concat([content, new Buffer(dir[i] + '\n')]);
+      }
+    }
+    else {
+      content = new Buffer('');
+    }
+    
   }
   catch (err) {
+    console.log("Open failed");
     content = new Buffer('');
   }
   return content;

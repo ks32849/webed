@@ -14,12 +14,13 @@
 </head>
 <body>
 <div id="editor">
-Ctrl-Y: open file
-Ctrl-X: save file
-use ssh terminal to build
+Ctrl-Y: open file 
+- will return dir list if a dir specified
+- will add the selected text to the current path
 
-Todo: show file explorer
-Todo: create node file watcher to trigger build in terminal
+Ctrl-X: save file
+
+use ssh terminal to build
 </div>
     
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.8/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -33,7 +34,7 @@ Todo: create node file watcher to trigger build in terminal
         name: 'saveCommand',
         bindKey: {win: 'Ctrl-X',  mac: 'Command-X'},
         exec: function(editor) {
-            res = prompt("Save as:", filepath);
+            var res = prompt("Save as:", filepath);
             if ((res != null) && (res != '')) {
                 $.post( "/save", { fn: res, data: editor.getValue() }, null, "text");
                 filepath = res;
@@ -48,7 +49,13 @@ Todo: create node file watcher to trigger build in terminal
         name: 'openCommand',
         bindKey: {win: 'Ctrl-Y',  mac: 'Command-Y'},
         exec: function(editor) {
-            res = prompt("Open file:", filepath);
+            var selected = editor.getCopyText();
+            var prompttxt = filepath
+            if ((selected != null) && (selected != '')) {
+                prompttxt = filepath + '/' + selected;
+            }
+
+            var res = prompt("Open file:", prompttxt);
             if ((res != null) && (res != '')) {
                 $.get( "/open", { fn: res },function( data ) {
                     if ((data != null) && (data != '')) {
