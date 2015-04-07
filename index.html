@@ -14,8 +14,8 @@
 </head>
 <body>
 <div id="editor">
-Ctrl-O: open file
-Ctrl-S: save file
+Ctrl-Y: open file
+Ctrl-X: save file
 use ssh terminal to build
 
 Todo: show file explorer
@@ -31,11 +31,9 @@ Todo: create node file watcher to trigger build in terminal
     editor.getSession().setMode("ace/mode/c_cpp");
     editor.commands.addCommand({
         name: 'saveCommand',
-        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+        bindKey: {win: 'Ctrl-X',  mac: 'Command-X'},
         exec: function(editor) {
-            //if ((filepath == '') || (filepath == null)) {
             res = prompt("Save as:", filepath);
-            //}
             if ((res != null) && (res != '')) {
                 $.post( "/save", { fn: res, data: editor.getValue() }, null, "text");
                 filepath = res;
@@ -48,9 +46,8 @@ Todo: create node file watcher to trigger build in terminal
 
     editor.commands.addCommand({
         name: 'openCommand',
-        bindKey: {win: 'Ctrl-O',  mac: 'Command-O'},
+        bindKey: {win: 'Ctrl-Y',  mac: 'Command-Y'},
         exec: function(editor) {
-
             res = prompt("Open file:", filepath);
             if ((res != null) && (res != '')) {
                 $.get( "/open", { fn: res },function( data ) {
