@@ -18,6 +18,8 @@ Ctrl-Y: open file
 - will return dir list if a dir specified
 - will add the selected text to the current path
 
+Ctrl-Shift-L: expand selection to whole line
+
 Ctrl-X: save file
 
 use ssh terminal to build
@@ -38,7 +40,7 @@ use ssh terminal to build
             if ((res != null) && (res != '')) {
                 $.post( "/save", { fn: res, data: editor.getValue() }, null, "text");
                 filepath = res;
-                $("title").text(filepath);
+                setTitle(filepath);
                 console.log("saved");
             }
         },
@@ -60,7 +62,7 @@ use ssh terminal to build
                 $.get( "/open", { fn: res },function( data ) {
                     if ((data != null) && (data != '')) {
                         filepath = res;
-                         $("title").text(filepath);
+                         setTitle(filepath);
                         editor.setValue(data)
                         console.log("opened");
                     }
@@ -69,6 +71,11 @@ use ssh terminal to build
         },
         readOnly: true // false if this command should not apply in readOnly mode
     });
+
+    setTitle = function(path) {
+        parts = path.split('/');
+        $("title").text(parts[parts.length - 1]);
+    }
 </script>
 
 </body>
